@@ -55,14 +55,76 @@ async function loadTrainingPage() {
 }
 
 async function loadMyHistory(userId) {
-    historyList.textContent = "Loading your training history...";
+    historyList.textContent = "Loading training history...";
 
-    let query = supabaseClient
-    .from("training_records")
-    .select("trainee_id, department, training_type, trainer_name, result, notes, created_at");
+    const { data: records, error } = await supabaseClient
+        .from("training_records")
+        .select("trainee_username, department, training_type, trainer_name, result, notes, created_at")
+        .order("trainee_username", { ascending: true })
+        .order("created_at", { ascending: false });
 
-if (!allowedRoles.includes(currentProfile.role)) {
-    query = query.eq("trainee_id", userId);
+    if (error) {
+        historyList.textContent = "Could not load history: " + error.message;
+        return;
+    }
+
+    if (!records || records.length === 0) {
+        historyList.textContent = "No training records found.";
+        return;
+    }
+
+    historyList.innerHTML = "";
+
+    const groupedRecords = {};
+
+    records.forEach(record => {
+        const username = record.trainee_username || "Unknown User";
+
+        if (!groupedRecords[username]) {
+            groupedRecords[username] = [];
+        }
+
+        groupedRecords[username].push(record);
+    });
+
+    Object.entries(groupedRecords).forEach(([username, userRecords]) => {
+        const section = document.createElement("div");
+        section.className = "training-user-section";
+
+        const heading = document.createElement("h3");
+        heading.textContent = username;
+
+        section.appendChild(heading);
+
+        userRecords.forEach(record => {
+            const card = document.createElement("div");
+            card.className = "training-record";
+
+            const training = document.createElement("h4");
+            training.textContent = record.training_type;
+
+            const department = document.createElement("p");
+            department.textContent = "Department: " + record.department;
+
+            const trainer = document.createElement("p");
+            trainer.textContent = "Trainer: " + record.trainer_name;
+
+            const result = document.createElement("p");
+            result.textContent = "Result: " + record.result;
+
+            const notes = document.createElement("p");
+            notes.textContent = "Notes: " + (record.notes || "None");
+
+            const date = document.createElement("p");
+            date.textContent = "Date: " +
+                new Date(record.created_at).toLocaleString("en-GB");
+
+            card.append(training, department, trainer, result, notes, date);
+            section.appendChild(card);
+        });
+
+        historyList.appendChild(section);
+    });
 }
 
 const { data: records, error } = await query
