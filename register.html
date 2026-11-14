@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>North London | Register</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+</head>
+<body class="login-page">
+
+<div class="login-box">
+    <h1>NORTH LONDON</h1>
+    <p class="subtitle">PUBLIC MEMBER REGISTRATION</p>
+
+    <label>Username</label>
+    <input id="username" placeholder="Choose a username">
+
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Email address">
+
+    <label>Password</label>
+    <input id="password" type="password" placeholder="At least 10 characters">
+
+    <button id="registerButton">Create Account</button>
+
+    <p id="message"></p>
+    <a href="login.html">Already registered? Login</a>
+</div>
+
+<script>
+document.getElementById("registerButton").onclick = async () => {
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+        message.textContent = "Username must be 3-20 letters, numbers or underscores.";
+        return;
+    }
+
+    if (password.length < 10) {
+        message.textContent = "Password must be at least 10 characters.";
+        return;
+    }
+
+    const { error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+            data: { username }
+        }
+    });
+
+    message.textContent = error
+        ? error.message
+        : "Registration submitted! Check your email if confirmation is required.";
+};
+</script>
+
+</body>
+</html>

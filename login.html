@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>North London | Login</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+</head>
+<body class="login-page">
+
+<div class="login-box">
+    <h1>NORTH LONDON</h1>
+    <p class="subtitle">STAFF MANAGEMENT PORTAL</p>
+
+    <div id="loginPanel">
+        <h2>Login</h2>
+
+        <label>Email address</label>
+        <input id="email" type="email" required>
+
+        <label>Password</label>
+        <input id="password" type="password" required>
+
+        <button id="loginButton">Login</button>
+
+        <p>Don't have an account?</p>
+        <button id="registerButton">Create Public Account</button>
+    </div>
+
+    <p id="message"></p>
+</div>
+
+<script>
+const message = document.getElementById("message");
+
+document.getElementById("loginButton").onclick = async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        message.textContent = error.message;
+        return;
+    }
+
+    if (data.session) {
+        window.location.replace("index.html");
+    }
+};
+
+document.getElementById("registerButton").onclick = () => {
+    window.location.href = "register.html";
+};
+</script>
+</body>
+</html>
