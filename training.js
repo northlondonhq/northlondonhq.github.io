@@ -57,11 +57,16 @@ async function loadTrainingPage() {
 async function loadMyHistory(userId) {
     historyList.textContent = "Loading your training history...";
 
-    const { data: records, error } = await supabaseClient
-        .from("training_records")
-        .select("department, training_type, trainer_name, result, notes, created_at")
-        
-        .order("created_at", { ascending: false });
+    let query = supabaseClient
+    .from("training_records")
+    .select("trainee_id, department, training_type, trainer_name, result, notes, created_at");
+
+if (!allowedRoles.includes(currentProfile.role)) {
+    query = query.eq("trainee_id", userId);
+}
+
+const { data: records, error } = await query
+    .order("created_at", { ascending: false });
 
     if (error) {
         historyList.textContent =
