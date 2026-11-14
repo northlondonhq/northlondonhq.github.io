@@ -60,7 +60,7 @@ async function loadMyHistory(userId) {
     const { data: records, error } = await supabaseClient
         .from("training_records")
         .select("department, training_type, trainer_name, result, notes, created_at")
-        .eq("trainee_id", userId)
+        
         .order("created_at", { ascending: false });
 
     if (error) {
