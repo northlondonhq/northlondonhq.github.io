@@ -73,7 +73,7 @@ const { data: records, error } = await query
             "Could not load your history: " + error.message;
         return;
     }
-
+alert("Account role: " + currentProfile.role + " | Records received: " + records.length);
     if (!records || records.length === 0) {
         historyList.textContent = "You do not have any training records yet.";
         return;
