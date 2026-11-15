@@ -1,4 +1,9 @@
 
+/* =====================================
+   NORTH LONDON - COMPLETE WEBSITE THEME
+   Modern Blue & White Design
+===================================== */
+
 * {
     box-sizing: border-box;
 }
@@ -6,25 +11,32 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #101827;
-    color: white;
+    background: #edf4fc;
+    color: #193452;
 }
+
+/* =====================================
+   SIDEBAR & NAVIGATION
+===================================== */
 
 .sidebar {
     position: fixed;
     width: 250px;
     height: 100vh;
-    background: #172b49;
+    background: #ffffff;
     padding: 25px;
+    border-right: 1px solid #d6e4f3;
+    box-shadow: 3px 0 12px rgba(30, 70, 110, 0.05);
 }
 
 .sidebar h2 {
     letter-spacing: 2px;
     font-size: 22px;
+    color: #163b65;
 }
 
 .subtitle {
-    color: #8ba8ca;
+    color: #6593c2;
     font-size: 12px;
     letter-spacing: 3px;
 }
@@ -35,16 +47,22 @@ nav {
 
 nav a {
     display: block;
-    color: white;
+    color: #345574;
     text-decoration: none;
     padding: 15px 10px;
-    border-radius: 6px;
+    border-radius: 8px;
     margin-bottom: 8px;
+    transition: 0.2s;
 }
 
 nav a:hover {
-    background: #31547e;
+    background: #e4effc;
+    color: #1768b2;
 }
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
 
 main {
     margin-left: 250px;
@@ -55,8 +73,13 @@ header {
     margin-bottom: 40px;
 }
 
+header h1,
+header h2 {
+    color: #163b65;
+}
+
 header p {
-    color: #9eafc5;
+    color: #64809d;
 }
 
 section {
@@ -64,22 +87,34 @@ section {
     scroll-margin-top: 20px;
 }
 
+/* =====================================
+   DASHBOARD CARDS
+===================================== */
+
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 20px;
 }
 
-.card, .team {
-    background: #1c2c43;
+.card,
+.team {
+    background: #ffffff;
     padding: 25px;
-    border-radius: 10px;
-    border: 1px solid #30445f;
+    border-radius: 12px;
+    border: 1px solid #d8e6f5;
+    box-shadow: 0 4px 12px rgba(30, 70, 110, 0.05);
+}
+
+.card h3,
+.team h3 {
+    color: #244b73;
 }
 
 .card p {
     font-size: 28px;
-    color: #62a9f5;
+    color: #2580d0;
+    font-weight: bold;
 }
 
 .teams {
@@ -92,60 +127,76 @@ section {
     padding: 22px;
 }
 
-input, select, textarea {
+/* =====================================
+   INPUTS & FORMS
+===================================== */
+
+input,
+select,
+textarea {
     display: block;
     width: 100%;
     padding: 13px;
     margin: 10px 0 20px;
-    background: #1c2c43;
-    border: 1px solid #405675;
-    border-radius: 6px;
-    color: white;
+    background: #ffffff;
+    border: 1px solid #c5d9ed;
+    border-radius: 8px;
+    color: #193452;
+    font-family: Arial, sans-serif;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3187d2;
+    box-shadow: 0 0 0 3px rgba(49, 135, 210, 0.12);
 }
 
 label {
     font-size: 14px;
-    color: #b8c9dd;
+    color: #456481;
 }
 
+/* =====================================
+   BUTTONS
+===================================== */
+
 button {
-    background: #2865a5;
-    color: white;
+    background: #287ec4;
+    color: #ffffff;
     border: none;
     padding: 14px 22px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
 button:hover {
-    background: #397fc4;
+    background: #1765a8;
+    transform: translateY(-1px);
 }
+
+/* =====================================
+   RECORDS
+===================================== */
 
 #records {
     margin-top: 20px;
 }
 
 .record {
-    background: #1c2c43;
+    background: #ffffff;
     padding: 20px;
     margin-bottom: 12px;
-    border-radius: 8px;
+    border-radius: 10px;
+    border: 1px solid #d8e6f5;
 }
 
-@media(max-width: 750px) {
-    .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-    }
-
-    main {
-        margin-left: 0;
-        padding: 20px;
-    }
-}
-
-/* NORTH LONDON LOGIN */
+/* =====================================
+   LOGIN & REGISTRATION
+===================================== */
 
 .login-page {
     min-height: 100vh;
@@ -153,24 +204,28 @@ button:hover {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    background: linear-gradient(135deg, #eaf3fd, #d9eaff);
 }
 
 .login-box {
-    background: #172b49;
+    background: #ffffff;
     width: 100%;
     max-width: 430px;
     padding: 35px;
-    border-radius: 12px;
-    border: 1px solid #30445f;
+    border-radius: 16px;
+    border: 1px solid #d5e4f4;
+    box-shadow: 0 12px 35px rgba(30, 70, 110, 0.10);
 }
 
 .login-box h1 {
     text-align: center;
     letter-spacing: 3px;
+    color: #163b65;
 }
 
 .login-box h2 {
     margin-top: 35px;
+    color: #244b73;
 }
 
 .login-box .subtitle {
@@ -188,112 +243,93 @@ button:hover {
 #message {
     margin-top: 20px;
     text-align: center;
+    color: #345574;
 }
-/* Training history sections */
+
+/* =====================================
+   TRAINING HISTORY
+===================================== */
+
+/* Each username section */
 
 .training-user-section {
-    background: #111c30;
-    border: 1px solid #29415f;
+    background: #ffffff;
+    border: 1px solid #cbdff2;
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
-}
-
-.training-user-section h3 {
-    color: #60a5fa;
-    font-size: 21px;
-    padding-bottom: 12px;
-    margin-bottom: 18px;
-    border-bottom: 2px solid #29415f;
-}
-
-/* Individual training records */
-
-.training-record {
-    background: #1b2a42;
-    border: 1px solid #344b68;
-    border-radius: 9px;
-    padding: 15px;
-    margin-bottom: 14px;
-}
-
-.training-record h4 {
-    color: #ffffff;
-    font-size: 17px;
-    margin-top: 0;
-    margin-bottom: 12px;
-}
-
-.training-record p {
-    color: #cbd5e1;
-    margin: 7px 0;
-    font-size: 14px;
-}
-
-.training-record:last-child {
-    margin-bottom: 0;
-}
-
-/* =================================
-   NORTH LONDON - TRAINING HISTORY
-================================= */
-
-/* Main section for each username */
-.training-user-section {
-    background: #111c30;
-    border: 1px solid #29415f;
-    border-radius: 12px;
-    padding: 20px;
+    padding: 22px;
     margin-bottom: 30px;
-    border-bottom: 3px solid #64748b;
+    border-bottom: 4px solid #438ed0;
+    box-shadow: 0 4px 12px rgba(30, 70, 110, 0.05);
 }
 
 /* Username heading */
+
 .training-user-section h3 {
-    color: #60a5fa;
+    color: #1765a8;
     font-size: 22px;
     font-weight: bold;
     padding-bottom: 15px;
     margin-top: 0;
     margin-bottom: 20px;
-    border-bottom: 2px solid #29415f;
+    border-bottom: 2px solid #dce9f6;
 }
 
-/* Individual training record */
+/* Individual training records */
+
 .training-record {
-    background: #1b2a42;
-    border: 1px solid #344b68;
+    background: #f2f7fd;
+    border: 1px solid #d8e6f5;
     border-radius: 9px;
     padding: 18px;
     margin-bottom: 20px;
-    border-bottom: 2px solid #64748b;
+    border-bottom: 2px solid #b9d2eb;
 }
 
-/* Training record title */
 .training-record h4 {
-    color: #ffffff;
+    color: #193f67;
     font-size: 18px;
     font-weight: bold;
     margin-top: 0;
     margin-bottom: 15px;
 }
 
-/* Training record information */
 .training-record p {
-    color: #cbd5e1;
+    color: #506d89;
     font-size: 14px;
     margin: 9px 0;
     line-height: 1.5;
 }
 
-/* Remove divider after the final record */
 .training-record:last-child {
     border-bottom: none;
     margin-bottom: 0;
 }
 
-/* Divider after each username */
 .training-user-section:last-child {
-    border-bottom: none;
     margin-bottom: 0;
+}
+
+/* =====================================
+   MOBILE RESPONSIVENESS
+===================================== */
+
+@media(max-width: 750px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    main {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .login-box {
+        padding: 25px;
+    }
 }
