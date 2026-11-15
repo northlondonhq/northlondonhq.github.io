@@ -54,55 +54,79 @@ async function loadTrainingPage() {
     }
 }
 
+
 async function loadMyHistory(userId) {
-    historyList.textContent = "Loading your training history...";
+    historyList.textContent = "Loading training history...";
 
     const { data: records, error } = await supabaseClient
         .from("training_records")
-        .select("department, training_type, trainer_name, result, notes, created_at")
-        
+        .select("trainee_username, department, training_type, trainer_name, result, notes, created_at")
+        .order("trainee_username", { ascending: true })
         .order("created_at", { ascending: false });
 
     if (error) {
-        historyList.textContent =
-            "Could not load your history: " + error.message;
+        historyList.textContent = "Could not load history: " + error.message;
         return;
     }
 
     if (!records || records.length === 0) {
-        historyList.textContent = "You do not have any training records yet.";
+        historyList.textContent = "No training records found.";
         return;
     }
 
     historyList.innerHTML = "";
 
+    const groupedRecords = {};
+
     records.forEach(record => {
-        const card = document.createElement("div");
-        card.className = "training-record";
+        const username = record.trainee_username || "Unknown User";
 
-        const heading = document.createElement("h4");
-        heading.textContent = record.training_type;
+        if (!groupedRecords[username]) {
+            groupedRecords[username] = [];
+        }
 
-        const department = document.createElement("p");
-        department.textContent = "Department: " + record.department;
+        groupedRecords[username].push(record);
+    });
 
-        const trainer = document.createElement("p");
-        trainer.textContent = "Trainer: " + record.trainer_name;
+    Object.entries(groupedRecords).forEach(([username, userRecords]) => {
+        const section = document.createElement("div");
+        section.className = "training-user-section";
 
-        const result = document.createElement("p");
-        result.textContent = "Result: " + record.result;
+        const heading = document.createElement("h3");
+        heading.textContent = username;
+        section.appendChild(heading);
 
-        const notes = document.createElement("p");
-        notes.textContent = "Notes: " + (record.notes || "None");
+        userRecords.forEach(record => {
+            const card = document.createElement("div");
+            card.className = "training-record";
 
-        const date = document.createElement("p");
-        date.textContent = "Date: " +
-            new Date(record.created_at).toLocaleString("en-GB");
+            const training = document.createElement("h4");
+            training.textContent = record.training_type;
 
-        card.append(heading, department, trainer, result, notes, date);
-        historyList.appendChild(card);
+            const department = document.createElement("p");
+            department.textContent = "Department: " + record.department;
+
+            const trainer = document.createElement("p");
+            trainer.textContent = "Trainer: " + record.trainer_name;
+
+            const result = document.createElement("p");
+            result.textContent = "Result: " + record.result;
+
+            const notes = document.createElement("p");
+            notes.textContent = "Notes: " + (record.notes || "None");
+
+            const date = document.createElement("p");
+            date.textContent = "Date: " +
+                new Date(record.created_at).toLocaleString("en-GB");
+
+            card.append(training, department, trainer, result, notes, date);
+            section.appendChild(card);
+        });
+
+        historyList.appendChild(section);
     });
 }
+
 
 if (trainingForm) {
     trainingForm.addEventListener("submit", async function(event) {
