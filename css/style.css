@@ -189,3 +189,47 @@ button:hover {
     margin-top: 20px;
     text-align: center;
 }
+/* Training history sections */
+
+.training-user-section {
+    background: #111c30;
+    border: 1px solid #29415f;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.training-user-section h3 {
+    color: #60a5fa;
+    font-size: 21px;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid #29415f;
+}
+
+/* Individual training records */
+
+.training-record {
+    background: #1b2a42;
+    border: 1px solid #344b68;
+    border-radius: 9px;
+    padding: 15px;
+    margin-bottom: 14px;
+}
+
+.training-record h4 {
+    color: #ffffff;
+    font-size: 17px;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.training-record p {
+    color: #cbd5e1;
+    margin: 7px 0;
+    font-size: 14px;
+}
+
+.training-record:last-child {
+    margin-bottom: 0;
+}
