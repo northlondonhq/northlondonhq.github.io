@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>North London | Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>North London | Public Registration</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase.js"></script>
@@ -15,10 +16,7 @@
     <p class="subtitle">PUBLIC MEMBER REGISTRATION</p>
 
     <label>Username</label>
-    <input id="username" placeholder="Choose a username">
-
-    <label>Email</label>
-    <input id="email" type="email" placeholder="Email address">
+    <input id="username" type="text" placeholder="Choose a username" maxlength="20">
 
     <label>Password</label>
     <input id="password" type="password" placeholder="At least 10 characters">
@@ -30,11 +28,14 @@
 </div>
 
 <script>
+const message = document.getElementById("message");
+
 document.getElementById("registerButton").onclick = async () => {
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim();
+    const username = document.getElementById("username").value.trim().toLowerCase();
     const password = document.getElementById("password").value;
-    const message = document.getElementById("message");
+    const button = document.getElementById("registerButton");
+
+    message.textContent = "";
 
     if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
         message.textContent = "Username must be 3-20 letters, numbers or underscores.";
@@ -46,17 +47,38 @@ document.getElementById("registerButton").onclick = async () => {
         return;
     }
 
-    const { error } = await supabaseClient.auth.signUp({
-        email,
-        password,
+    button.disabled = true;
+    button.textContent = "Creating account...";
+
+    // Internal login identifier. Public users never need to enter this.
+    const hiddenEmail = username + "@northlondon.invalid";
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: hiddenEmail,
+        password: password,
         options: {
-            data: { username }
+            data: {
+                username: username
+            }
         }
     });
 
-    message.textContent = error
-        ? error.message
-        : "Registration submitted! Check your email if confirmation is required.";
+    if (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+        button.textContent = "Create Account";
+        return;
+    }
+
+    if (data.session) {
+        message.textContent = "Account created! Redirecting...";
+        window.location.replace("training.html");
+        return;
+    }
+
+    message.textContent = "Account created, but no login session was returned. Please contact an administrator.";
+    button.disabled = false;
+    button.textContent = "Create Account";
 };
 </script>
 
