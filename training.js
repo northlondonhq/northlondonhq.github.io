@@ -15,6 +15,8 @@ const allowedRoles = [
 
 let currentProfile = null;
 
+
+// LOAD TRAINING PAGE
 async function loadTrainingPage() {
     const { data: { session }, error: sessionError } =
         await supabaseClient.auth.getSession();
@@ -37,9 +39,10 @@ async function loadTrainingPage() {
 
     currentProfile = profile;
 
-    accessMessage.textContent = "Welcome, " + profile.username + ".";
+    accessMessage.textContent =
+        "Welcome, " + profile.username + ".";
 
-    // Everyone can view their own training history.
+    // Everyone can view records permitted by Supabase.
     historyPanel.hidden = false;
     await loadMyHistory(session.user.id);
 
@@ -54,6 +57,8 @@ async function loadTrainingPage() {
     }
 }
 
+
+// LOAD AND GROUP TRAINING HISTORY
 async function loadMyHistory(userId) {
     historyList.textContent = "Loading training history...";
 
@@ -64,16 +69,18 @@ async function loadMyHistory(userId) {
         .order("created_at", { ascending: false });
 
     if (error) {
-        historyList.textContent = "Could not load history: " + error.message;
-        return;
-    }
-
-    if (!records || records.length === 0) {
-        historyList.textContent = "No training records found.";
+        historyList.textContent =
+            "Could not load history: " + error.message;
         return;
     }
 
     historyList.innerHTML = "";
+
+    if (!records || records.length === 0) {
+        historyList.textContent =
+            "You do not have any training records yet.";
+        return;
+    }
 
     const groupedRecords = {};
 
@@ -88,6 +95,7 @@ async function loadMyHistory(userId) {
     });
 
     Object.entries(groupedRecords).forEach(([username, userRecords]) => {
+
         const section = document.createElement("div");
         section.className = "training-user-section";
 
@@ -97,6 +105,7 @@ async function loadMyHistory(userId) {
         section.appendChild(heading);
 
         userRecords.forEach(record => {
+
             const card = document.createElement("div");
             card.className = "training-record";
 
@@ -104,128 +113,121 @@ async function loadMyHistory(userId) {
             training.textContent = record.training_type;
 
             const department = document.createElement("p");
-            department.textContent = "Department: " + record.department;
+            department.textContent =
+                "Department: " + record.department;
 
             const trainer = document.createElement("p");
-            trainer.textContent = "Trainer: " + record.trainer_name;
+            trainer.textContent =
+                "Trainer: " + record.trainer_name;
 
             const result = document.createElement("p");
-            result.textContent = "Result: " + record.result;
+            result.textContent =
+                "Result: " + record.result;
 
             const notes = document.createElement("p");
-            notes.textContent = "Notes: " + (record.notes || "None");
+            notes.textContent =
+                "Notes: " + (record.notes || "None");
 
             const date = document.createElement("p");
-            date.textContent = "Date: " +
+            date.textContent =
+                "Date: " +
                 new Date(record.created_at).toLocaleString("en-GB");
 
-            card.append(training, department, trainer, result, notes, date);
+            card.append(
+                training,
+                department,
+                trainer,
+                result,
+                notes,
+                date
+            );
 
-if (currentProfile && currentProfile.role === "owner") {
-    const removeButton = document.createElement("button");
+            // ONLY THE OWNER CAN SEE THE REMOVE BUTTON
+            if (currentProfile && currentProfile.role === "owner") {
 
-    removeButton.textContent = "REMOVE";
-    removeButton.className = "remove-training-button";
+                const removeButton =
+                    document.createElement("button");
 
-    removeButton.addEventListener("click", async function() {
-        const confirmed = confirm(
-            "Are you sure you want to permanently remove this training record?"
-        );
+                removeButton.textContent = "REMOVE";
+                removeButton.className = "remove-training-button";
 
-        if (!confirmed) return;
+                removeButton.addEventListener("click", async function() {
 
-        removeButton.disabled = true;
-        removeButton.textContent = "Removing...";
+                    const confirmed = confirm(
+                        "Are you sure you want to permanently remove this training record?"
+                    );
 
-        const { error } = await supabaseClient
-            .from("training_records")
-            .delete()
-            .eq("id", record.id);
+                    if (!confirmed) return;
 
-        if (error) {
-            alert("Could not remove record: " + error.message);
-            removeButton.disabled = false;
-            removeButton.textContent = "REMOVE";
-            return;
-        }
+                    removeButton.disabled = true;
+                    removeButton.textContent = "Removing...";
 
-        alert("Training record removed successfully!");
-        await loadMyHistory();
-    });
+                    const { error: deleteError } = await supabaseClient
+                        .from("training_records")
+                        .delete()
+                        .eq("id", record.id);
 
-    card.appendChild(removeButton);
-}
+                    if (deleteError) {
+                        alert(
+                            "Could not remove record: " +
+                            deleteError.message
+                        );
 
-section.appendChild(card);
+                        removeButton.disabled = false;
+                        removeButton.textContent = "REMOVE";
+                        return;
+                    }
+
+                    alert("Training record removed successfully!");
+
+                    await loadMyHistory(userId);
+                });
+
+                card.appendChild(removeButton);
+            }
+
+            section.appendChild(card);
         });
 
         historyList.appendChild(section);
     });
 }
 
-const { data: records, error } = await query
-    .order("created_at", { ascending: false });
 
-    if (error) {
-        historyList.textContent =
-            "Could not load your history: " + error.message;
-        return;
-    }
-alert("Account role: " + currentProfile.role + " | Records received: " + records.length);
-    if (!records || records.length === 0) {
-        historyList.textContent = "You do not have any training records yet.";
-        return;
-    }
-
-    historyList.innerHTML = "";
-
-    records.forEach(record => {
-        const card = document.createElement("div");
-        card.className = "training-record";
-
-        const heading = document.createElement("h4");
-        heading.textContent = record.training_type;
-
-        const department = document.createElement("p");
-        department.textContent = "Department: " + record.department;
-
-        const trainer = document.createElement("p");
-        trainer.textContent = "Trainer: " + record.trainer_name;
-
-        const result = document.createElement("p");
-        result.textContent = "Result: " + record.result;
-
-        const notes = document.createElement("p");
-        notes.textContent = "Notes: " + (record.notes || "None");
-
-        const date = document.createElement("p");
-        date.textContent = "Date: " +
-            new Date(record.created_at).toLocaleString("en-GB");
-
-        card.append(heading, department, trainer, result, notes, date);
-        historyList.appendChild(card);
-    });
-}
-
+// SUBMIT NEW TRAINING
 if (trainingForm) {
+
     trainingForm.addEventListener("submit", async function(event) {
+
         event.preventDefault();
 
-        if (!currentProfile ||
-            !allowedRoles.includes(currentProfile.role)) {
+        if (
+            !currentProfile ||
+            !allowedRoles.includes(currentProfile.role)
+        ) {
             trainingMessage.textContent =
                 "You are not authorised to log training.";
             return;
         }
 
-        trainingMessage.textContent = "Submitting training record...";
+        trainingMessage.textContent =
+            "Submitting training record...";
 
         const record = {
-            traineeUsername: document.getElementById("trainee").value.trim(),
-            department: document.getElementById("department").value,
-            trainingType: document.getElementById("trainingType").value.trim(),
-            result: document.getElementById("result").value,
-            notes: document.getElementById("notes").value.trim()
+            traineeUsername:
+                document.getElementById("trainee").value.trim(),
+
+            department:
+                document.getElementById("department").value,
+
+            trainingType:
+                document.getElementById("trainingType").value.trim(),
+
+            result:
+                document.getElementById("result").value,
+
+            notes:
+                document.getElementById("notes").value.trim()
         };
 
         const { data, error } = await supabaseClient.functions.invoke(
@@ -247,8 +249,7 @@ if (trainingForm) {
         document.getElementById("trainerName").value =
             currentProfile.username || "";
 
-        // Refresh the trainee's own history if the trainer logged
-        // a record for themselves.
+        // Refresh training history.
         const { data: { session } } =
             await supabaseClient.auth.getSession();
 
@@ -258,4 +259,6 @@ if (trainingForm) {
     });
 }
 
+
+// START PAGE
 loadTrainingPage();
