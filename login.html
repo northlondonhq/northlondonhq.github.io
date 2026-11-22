@@ -14,20 +14,20 @@
 
 <div class="login-box">
     <h1>NORTH LONDON</h1>
-    <p class="subtitle">STAFF MANAGEMENT PORTAL</p>
+    <p class="subtitle">MANAGEMENT PORTAL</p>
 
     <div id="loginPanel">
         <h2>Login</h2>
 
-        <label>Email address</label>
-        <input id="email" type="email" required>
+        <label>Username or Staff Email</label>
+        <input id="loginIdentity" type="text" placeholder="Username or email" required>
 
         <label>Password</label>
         <input id="password" type="password" required>
 
         <button id="loginButton">Login</button>
 
-        <p>Don't have an account?</p>
+        <p>Need a public account?</p>
         <button id="registerButton">Create Public Account</button>
     </div>
 
@@ -36,24 +36,57 @@
 
 <script>
 const message = document.getElementById("message");
+const button = document.getElementById("loginButton");
 
-document.getElementById("loginButton").onclick = async (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
+button.onclick = async () => {
+    const identity = document.getElementById("loginIdentity").value.trim();
     const password = document.getElementById("password").value;
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
+    message.textContent = "";
 
-    if (error) {
-        message.textContent = error.message;
+    if (!identity || !password) {
+        message.textContent = "Please enter your username/email and password.";
         return;
     }
 
-    if (data.session) {
+    button.disabled = true;
+    button.textContent = "Logging in...";
+
+    // Public usernames use the same hidden identifier as registration.
+    // Staff continue using their normal email addresses.
+    const loginEmail = identity.includes("@")
+        ? identity
+        : identity.toLowerCase() + "@northlondon.invalid";
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: loginEmail,
+        password: password
+    });
+
+    if (error) {
+        message.textContent = "Login failed. Check your username/email and password.";
+        button.disabled = false;
+        button.textContent = "Login";
+        return;
+    }
+
+    const { data: profile, error: profileError } = await supabaseClient
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
+
+    if (profileError || !profile) {
+        await supabaseClient.auth.signOut();
+        message.textContent = "Your account profile could not be found. Please contact an administrator.";
+        button.disabled = false;
+        button.textContent = "Login";
+        return;
+    }
+
+    if (profile.role === "public") {
+        window.location.replace("training.html");
+    } else {
         window.location.replace("index.html");
     }
 };
@@ -62,5 +95,6 @@ document.getElementById("registerButton").onclick = () => {
     window.location.href = "register.html";
 };
 </script>
+
 </body>
 </html>
