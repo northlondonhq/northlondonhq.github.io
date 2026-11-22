@@ -349,3 +349,22 @@ button:hover {
 .discord-button:hover {
     background: #4752C4;
 }
+.remove-training-button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.remove-training-button:hover {
+    background: #b02a37;
+}
+
+.remove-training-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
