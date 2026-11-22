@@ -333,3 +333,19 @@ button:hover {
         padding: 25px;
     }
 }
+.discord-button {
+    display: block;
+    margin-top: 15px;
+    padding: 12px;
+    background: #5865F2;
+    color: white !important;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.discord-button:hover {
+    background: #4752C4;
+}
