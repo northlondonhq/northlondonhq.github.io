@@ -59,7 +59,7 @@ async function loadMyHistory(userId) {
 
     const { data: records, error } = await supabaseClient
         .from("training_records")
-        .select("trainee_username, department, training_type, trainer_name, result, notes, created_at")
+        .select("id, trainee_username, department, training_type, trainer_name, result, notes, created_at")
         .order("trainee_username", { ascending: true })
         .order("created_at", { ascending: false });
 
@@ -120,7 +120,43 @@ async function loadMyHistory(userId) {
                 new Date(record.created_at).toLocaleString("en-GB");
 
             card.append(training, department, trainer, result, notes, date);
-            section.appendChild(card);
+
+if (currentProfile && currentProfile.role === "owner") {
+    const removeButton = document.createElement("button");
+
+    removeButton.textContent = "REMOVE";
+    removeButton.className = "remove-training-button";
+
+    removeButton.addEventListener("click", async function() {
+        const confirmed = confirm(
+            "Are you sure you want to permanently remove this training record?"
+        );
+
+        if (!confirmed) return;
+
+        removeButton.disabled = true;
+        removeButton.textContent = "Removing...";
+
+        const { error } = await supabaseClient
+            .from("training_records")
+            .delete()
+            .eq("id", record.id);
+
+        if (error) {
+            alert("Could not remove record: " + error.message);
+            removeButton.disabled = false;
+            removeButton.textContent = "REMOVE";
+            return;
+        }
+
+        alert("Training record removed successfully!");
+        await loadMyHistory();
+    });
+
+    card.appendChild(removeButton);
+}
+
+section.appendChild(card);
         });
 
         historyList.appendChild(section);
