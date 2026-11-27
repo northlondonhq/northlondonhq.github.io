@@ -4,9 +4,7 @@ const staffList = document.getElementById("staffList");
 const staffMessage = document.getElementById("staffMessage");
 const createStaffForm = document.getElementById("createStaffForm");
 
-if (ownerPanel) {
-    ownerPanel.hidden = true;
-}
+if (ownerPanel) ownerPanel.hidden = true;
 
 async function checkOwner() {
     const { data: { session }, error: sessionError } =
@@ -30,10 +28,7 @@ async function checkOwner() {
         return false;
     }
 
-    if (ownerPanel) {
-        ownerPanel.hidden = false;
-    }
-
+    if (ownerPanel) ownerPanel.hidden = false;
     return true;
 }
 
@@ -49,8 +44,7 @@ async function loadStaff() {
 
     if (error || data?.error) {
         staffList.textContent =
-            "Could not load staff: " +
-            (data?.error || error.message);
+            "Could not load staff: " + (data?.error || error.message);
         return;
     }
 
@@ -115,17 +109,14 @@ async function loadStaff() {
             updateButton.disabled = true;
 
             const { data, error } =
-                await supabaseClient.functions.invoke(
-                    "manage-staff",
-                    {
-                        body: {
-                            action: "update",
-                            userId: person.id,
-                            role: roleSelect.value,
-                            department: departmentSelect.value
-                        }
+                await supabaseClient.functions.invoke("manage-staff", {
+                    body: {
+                        action: "update",
+                        userId: person.id,
+                        role: roleSelect.value,
+                        department: departmentSelect.value
                     }
-                );
+                });
 
             updateButton.disabled = false;
 
@@ -143,22 +134,17 @@ async function loadStaff() {
 
         deleteButton.onclick = async () => {
             if (!confirm("Are you sure you want to delete " +
-                person.username + "?")) {
-                return;
-            }
+                person.username + "?")) return;
 
             deleteButton.disabled = true;
 
             const { data, error } =
-                await supabaseClient.functions.invoke(
-                    "manage-staff",
-                    {
-                        body: {
-                            action: "delete",
-                            userId: person.id
-                        }
+                await supabaseClient.functions.invoke("manage-staff", {
+                    body: {
+                        action: "delete",
+                        userId: person.id
                     }
-                );
+                });
 
             deleteButton.disabled = false;
 
@@ -193,9 +179,6 @@ if (createStaffForm) {
         const username =
             document.getElementById("newUsername").value.trim();
 
-        const email =
-            document.getElementById("newEmail").value.trim();
-
         const password =
             document.getElementById("newPassword").value;
 
@@ -208,18 +191,14 @@ if (createStaffForm) {
         staffMessage.textContent = "Creating staff account...";
 
         const { data, error } =
-            await supabaseClient.functions.invoke(
-                "clever-worker",
-                {
-                    body: {
-                        username,
-                        email,
-                        password,
-                        role,
-                        department
-                    }
+            await supabaseClient.functions.invoke("create-staff", {
+                body: {
+                    username,
+                    password,
+                    role,
+                    department
                 }
-            );
+            });
 
         if (error || data?.error) {
             staffMessage.textContent =
@@ -231,7 +210,6 @@ if (createStaffForm) {
             "Staff account created successfully!";
 
         createStaffForm.reset();
-
         await loadStaff();
     });
 }
