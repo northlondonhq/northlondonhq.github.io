@@ -145,7 +145,6 @@
             <p>Welcome to North London Management.</p>
         </header>
 
-
         <!-- DASHBOARD PAGE -->
 
         <section id="dashboard"
@@ -182,7 +181,6 @@
 
         </section>
 
-
         <!-- DEPARTMENTS PAGE -->
 
         <section id="teams"
@@ -198,30 +196,15 @@
 
             <div class="teams">
 
-                <div class="team">
-                    Metropolitan Police Service
-                </div>
-
-                <div class="team">
-                    Roads Policing Unit
-                </div>
-
-                <div class="team">
-                    Armed Response Unit
-                </div>
-
-                <div class="team">
-                    London Ambulance Service
-                </div>
-
-                <div class="team">
-                    London Fire Brigade
-                </div>
+                <div class="team">Metropolitan Police Service</div>
+                <div class="team">Roads Policing Unit</div>
+                <div class="team">Armed Response Unit</div>
+                <div class="team">London Ambulance Service</div>
+                <div class="team">London Fire Brigade</div>
 
             </div>
 
         </section>
-
 
         <!-- DEPARTMENT LEADS PAGE -->
 
@@ -243,7 +226,6 @@
             <p id="leadMessage" class="lead-message"></p>
 
         </section>
-
 
         <!-- TRAINING RECORDS PAGE -->
 
@@ -274,7 +256,6 @@
 
         </section>
 
-
         <!-- UPLOAD TRAINING PAGE -->
 
         <section id="upload"
@@ -304,7 +285,6 @@
 
         </section>
 
-
         <!-- STAFF MANAGEMENT PAGE -->
 
         <section id="staff"
@@ -325,42 +305,45 @@
                 <form id="createStaffForm">
 
                     <label>Staff Username</label>
-                    <input id="newUsername" required>
-
-                    <label>Staff Email</label>
-                    <input id="newEmail" type="email" required>
+                    <input
+                        id="newUsername"
+                        type="text"
+                        placeholder="Enter staff username"
+                        minlength="3"
+                        maxlength="20"
+                        required
+                    >
 
                     <label>Staff Password</label>
                     <input
                         id="newPassword"
                         type="password"
-                        required
+                        placeholder="At least 10 characters"
                         minlength="10"
+                        required
                     >
 
                     <label>Staff Permission</label>
 
-                    <select id="newRole">
-                        <option value="Administration">
+                    <select id="newRole" required>
+
+                        <option value="administration">
                             Administration
                         </option>
 
-                        <option value="Team Command">
+                        <option value="team_command">
                             Team Command
                         </option>
 
-                        <option value="Trainer">
+                        <option value="trainer">
                             Trainer
                         </option>
 
-                        <option value="General Staff">
-                            General Staff
-                        </option>
                     </select>
 
                     <label>Department</label>
 
-                    <select id="newDepartment">
+                    <select id="newDepartment" required>
 
                         <option>Metropolitan Police Service</option>
                         <option>Roads Policing Unit</option>
@@ -387,7 +370,6 @@
         </section>
 
     </main>
-
 
     <!-- WEBSITE SCRIPTS -->
 
